@@ -1,3 +1,7 @@
+This is mirror of git@git.drupal.org:project/rules_efq.git
+https://www.drupal.org/project/rules_efq
+
+
 EFQ Rules exposes Drupal EFQ API to rules, so that entities can be queried and fetched based on multiple fields, properties and conditions.
 
 There is a tutorial on how to use EFQ here, And this is the API documentation.
