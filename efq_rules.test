@@ -1,0 +1,175 @@
+<?php
+
+/**
+ * Class EFQRulesDataTestCase test data related stuff in EFQ Rules.
+ */
+class EFQRulesDataTestCase extends DrupalWebTestCase {
+  /**
+   * Makes sure passed variable is an array.
+   */
+  protected function assertArray($array, $msg='', $group='Other') {
+    $this->assertTrue(is_array($array), $msg, $group);
+  }
+
+  /**
+   * Makes sure $key is in $data (which is an array).
+   */
+  protected function assertIsset($data, $key, $msg='', $group='Other') {
+    $this->assertTrue(isset($data[$key]), $msg, $group);
+  }
+
+  /**
+   * @todo
+   */
+  public static function getInfo() {
+    $info = [
+      'name' => t('EFQ Rules data tests'),
+      'description' => t('Test rules data type defined by ERQ Rules.'),
+      'group' => t('rules'),
+    ];
+
+    return $info;
+  }
+
+  /**
+   * asks for efq_rules module to be loaded.
+   * @Overrides setUp
+   */
+  public function setUp() {
+    parent::setUp('efq_rules');
+  }
+
+  /**
+   * Tests data types defined by efq_rules.
+   */
+  public function testRulesDataInfo() {
+    $data = efq_rules_rules_data_info();
+    $this->assertArray($data);
+  }
+
+  /**
+   * Test action definition by efq_rules.
+   */
+  public function testDataDefinitionAction() {
+    $data = efq_rules_action_new_efq();
+    $this->assertArray($data);
+    $this->assertEqual(count($data), 1);
+    $this->assertTrue($data['efq'] instanceof EntityFieldQuery);
+  }
+
+  /**
+   * Tests helper function used to generate options list.
+   */
+  public function testValueCallback() {
+    $parameters = array(
+      'age', 'deleted', 'truefalse', 'field', 'operator', 'bundle',
+      'entity_type', 'name', 'entity_condition', 'direction',
+    );
+    foreach ($parameters as $param) {
+      $data = _efq_rules_value_callback(NULL, $param);
+      $this->assertNotNull($data);
+      $this->assertArray($data);
+
+      // @TODO: better test case for field, entity_type and bundle.
+    }
+  }
+}
+
+/**
+ * Class EFQRulesActionInfoTestCase Test rules_action_info hook in EFQ Rules.
+ */
+class EFQRulesActionInfoTestCase extends DrupalWebTestCase {
+  /**
+   * Makes sure passed variable is an array.
+   */
+  protected function assertArray($array, $msg='', $group='Other') {
+    $this->assertTrue(is_array($array), $msg, $group);
+  }
+
+  /**
+   * Makes sure $key is in $data (which is an array).
+   */
+  protected function assertIsset($data, $key, $msg='', $group='Other') {
+    $this->assertTrue(isset($data[$key]), $msg, $group);
+  }
+
+  public static function getInfo() {
+    $info = [
+      'name' => t('EFQ Rules action info tests'),
+      'description' => t('todo'),
+      'group' => t('rules'),
+    ];
+
+    return $info;
+  }
+
+  public function setUp() {
+    parent::setUp('efq_rules');
+  }
+
+  /**
+   * Tests rules_action_info hook implemented by efq_rules.
+   */
+  public function testActionInfo() {
+    $actions = efq_rules_rules_action_info();
+    $this->assertArray($actions);
+    foreach ($actions as $action) {
+      // Make sure each action has these two properties.
+      $this->assertIsset($action, 'label');
+      $this->assertIsset($action, 'group');
+
+      foreach (['parameter', 'provides'] as $info_name) {
+        if(!isset($action[$info_name])) {
+          continue;
+        }
+        else {
+          // If action has 'parameter' or 'provides' then...
+          $info = $action[$info_name];
+        }
+
+        $this->assertArray($info);
+
+        foreach ($info as $param) {
+          // Mske sure each parameter/provides has defined type and label.
+          $this->assertIsset($param, 'type');
+          $this->assertIsset($param, 'label');
+
+          // If it has a value callback, Make sure callback is available.
+          if(isset($param['options list'])) {
+            $this->assertTrue(function_exists($param['options list']));
+          }
+        }
+      }
+    }
+  }
+}
+
+class EFQRulesActionsTestCase extends DrupalWebTestCase {
+  /**
+   * Makes sure passed variable is an array.
+   */
+  protected function assertArray($array, $msg='', $group='Other') {
+    $this->assertTrue(is_array($array), $msg, $group);
+  }
+
+  /**
+   * Makes sure $key is in $data (which is an array).
+   */
+  protected function assertIsset($data, $key, $msg='', $group='Other') {
+    $this->assertTrue(isset($data[$key]), $msg, $group);
+  }
+
+  public static function getInfo() {
+    $info = [
+      'name' => t('EFQ Rules actions tests'),
+      'description' => t('todo'),
+      'group' => t('rules'),
+    ];
+
+    return $info;
+  }
+
+  public function setUp() {
+    parent::setUp('efq_rules');
+  }
+}

@@ -1,0 +1,7 @@
+name = EntityFieldQuery Rules
+description = Rules integration for EntityFieldQuery. Needs patch from https://drupal.org/node/2103079
+core = 7.x
+package = Rules
+dependencies[] = rules
+
+files[] = efq_rules.test
